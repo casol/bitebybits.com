@@ -34,7 +34,7 @@ class Post(models.Model):
                               default='draft')
 
     objects = models.Manager()  # default manager
-    publish = PublishedManager()  # custom manager
+    published = PublishedManager()  # custom manager
 
     def get_absolute_url(self):
         return reverse('blog:post_detail',
