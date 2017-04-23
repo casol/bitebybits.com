@@ -1,0 +1,48 @@
+body {
+    margin:0;
+    padding:0;
+    font-family:helvetica, sans-serif;
+}
+
+a {
+    color:#00abff;
+    text-decoration:none;
+}
+
+h1 {
+    font-weight:normal;
+    border-bottom:1px solid #bbb;
+    padding:0 0 10px 0;
+}
+
+h2 {
+    font-weight:normal;
+    margin:50px 0 0;
+}
+
+#content {
+    margin-left:40px;
+}
+
+#sidebar {
+    float:center;
+    width:100%;
+    padding:10px;
+    background:#f76466;
+    height:100%;
+}
+
+p.date {
+    color:#ccc;
+    font-family: georgia, serif;
+    font-size: 12px;
+    font-style: bold;
+}
+
+/* pagination */
+.pagination {
+    margin:40px 0;
+    font-weight:bold;
+}
+
+

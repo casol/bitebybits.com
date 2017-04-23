@@ -6,13 +6,13 @@
         <link href="{% static "css/blog.css" %}" rel="stylesheet">
     </head>
     <body>
+        <div id="sidebar">
+            <h2>bitebybits</h2>
+                <p>Hello! Here is my blog.</p>
+        </div>
         <div id="content">
             {% block content%}
             {% endblock %}
         </div>
-        <div id="sidebar">
-            <h2>My blog</h2>
-                <p>Hello! Here is my blog.</p>
-        </div>
-    </body>
+     </body>
 </html>
