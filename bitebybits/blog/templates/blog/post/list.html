@@ -4,13 +4,17 @@
 
 {% block content %}
     <!-- Main Content -->
+    {% for post in posts %}
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <div class="post-preview">
-                    <a href="post.html">
+                    <a href="detail.html">
                         <h2 class="post-title">
-                            Man must explore, and this is exploration at its greatest
+                            <a href="{{ post.get_absolute_url }}">
+                                {{ post.title }}
+                            </a>
+
                         </h2>
                         <h3 class="post-subtitle">
                             Problems look mighty small from 150 miles up
@@ -63,4 +67,5 @@
     </div>
 
     <hr>
+    {% endfor %}
 {% endblock %}
