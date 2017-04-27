@@ -29,3 +29,6 @@ def post_detail(request, year, month, day, post):
                   'blog/post/detail.html',
                   {'post': post})
 
+
+def about_page(request):
+    return render(request, 'blog/about.html',)

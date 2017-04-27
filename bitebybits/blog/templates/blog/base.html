@@ -56,9 +56,7 @@
     {% include "blog/navigation.html" %}
 
     <!-- Page Header -->
-
-    <!-- Page Header -->
-    {% block img %}
+    {% block page_header %}
     <header class="intro-header" style="background-image: url('{% static "img/home-bg.jpg" %}')">
         <div class="container">
             <div class="row">
@@ -74,13 +72,12 @@
             </div>
         </div>
     </header>
-{% endblock %}
+    {% endblock %}
 
     <!-- Main Content -->
     {% block content %}
 
     {% endblock %}
-
 
     <!-- Footer -->
     {% include "blog/footer.html" %}
