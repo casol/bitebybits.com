@@ -14,16 +14,16 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
                     <li>
-                        <a href="index.html">Home</a>
+                        <a href="{% url 'blog:post_list' %}">Home</a>
                     </li>
                     <li>
-                        <a href="about.html">About</a>
+                        <a href="{% url 'blog:about' %}">About</a>
                     </li>
                     <li>
                         <a href="post.html">Sample Post</a>
                     </li>
                     <li>
-                        <a href="contact.html">Contact</a>
+                        <a href="{% url 'contact' %}">Contact</a>
                     </li>
                 </ul>
             </div>
