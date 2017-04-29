@@ -12,5 +12,4 @@ urlpatterns = [
         views.post_detail,
         name='post_detail'),
 
-    url(r'^about/$', views.about_page, name='about'),
 ]

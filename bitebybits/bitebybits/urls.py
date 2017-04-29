@@ -25,5 +25,11 @@ urlpatterns = [
                            namespace='blog',
                            app_name='blog')),
 
-    url(r'^contact/', views.contact, name='contact'),
+    url(r'^contact/',
+        views.contact,
+        name='contact'),
+
+    url(r'^about/',
+        views.about_page,
+        name='about')
 ]
