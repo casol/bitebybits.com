@@ -47,16 +47,18 @@ def contact(request):
         form = ContactForm(request.POST)
         if form.is_valid():
             # Form fields passed validation
-            # name = form.cleaned_data['name']
+            name = form.cleaned_data['name']
             from_email = form.cleaned_data['email']
             subject = form.cleaned_data['subject']
-            message = form.cleaned_data['message']
+            message = 'You have a message from {} ({}):\n\n{}'.format(form.cleaned_data['name'],
+                                                                      form.cleaned_data['email'],
+                                                                      form.cleaned_data['message'])
             try:
                 send_mail(subject, message, from_email, ['contactfrombitstobytes@gmail.com'], fail_silently=False)
             except BadHeaderError:
                 return HttpResponse('Invalid header found.')
             return HttpResponseRedirect(reverse('success'))
-    return render(request, 'blog/contact_draft.html', {'form': form})
+    return render(request, 'blog/contact.html', {'form': form})
 
 
 def success(request):
