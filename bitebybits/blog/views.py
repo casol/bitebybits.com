@@ -1,7 +1,11 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
+from django.core.mail import send_mail, BadHeaderError
+from django.http import HttpResponse, HttpResponseRedirect
+from django.urls import reverse
 
 from .models import Post
+from .forms import ContactForm
 
 
 def post_list(request):
@@ -35,4 +39,25 @@ def about_page(request):
 
 
 def contact(request):
-    return render(request, 'blog/contact.html',)
+    if request.method == 'GET':
+        form = ContactForm()
+    else:
+        # Form was submitted
+        # Crated a form instance using submitted data
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            # Form fields passed validation
+            # name = form.cleaned_data['name']
+            from_email = form.cleaned_data['email']
+            subject = form.cleaned_data['subject']
+            message = form.cleaned_data['message']
+            try:
+                send_mail(subject, message, from_email, ['contactfrombitstobytes@gmail.com'], fail_silently=False)
+            except BadHeaderError:
+                return HttpResponse('Invalid header found.')
+            return HttpResponseRedirect(reverse('success'))
+    return render(request, 'blog/contact_draft.html', {'form': form})
+
+
+def success(request):
+    return render(request, 'blog/success.html',)

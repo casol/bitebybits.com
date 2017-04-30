@@ -31,5 +31,9 @@ urlpatterns = [
 
     url(r'^about/',
         views.about_page,
-        name='about')
+        name='about'),
+
+    url(r'^success/$',
+        views.success,
+        name='success')
 ]
