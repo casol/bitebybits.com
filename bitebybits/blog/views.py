@@ -50,6 +50,7 @@ def contact(request):
             name = form.cleaned_data['name']
             from_email = form.cleaned_data['email']
             subject = form.cleaned_data['subject']
+            # Message body with name and email
             message = 'You have a message from {} ({}):\n\n{}'.format(form.cleaned_data['name'],
                                                                       form.cleaned_data['email'],
                                                                       form.cleaned_data['message'])
