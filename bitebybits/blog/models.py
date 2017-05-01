@@ -3,6 +3,7 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
+from ckeditor.fields import RichTextField
 
 class PublishedManager(models.Manager):
     """
@@ -26,7 +27,7 @@ class Post(models.Model):
                             unique_for_date='publish')
     author = models.ForeignKey(User,
                                related_name='blog_posts')
-    body = models.TextField()
+    body = RichTextField()
     publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
