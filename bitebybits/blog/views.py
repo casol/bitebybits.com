@@ -3,6 +3,11 @@ from django.shortcuts import get_object_or_404
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
+from django.conf import settings
+
+# Google reCAPTCHA
+import urllib
+import json
 
 from .models import Post
 from .forms import ContactForm
@@ -47,18 +52,33 @@ def contact(request):
         form = ContactForm(request.POST)
         if form.is_valid():
             # Form fields passed validation
-            name = form.cleaned_data['name']
-            from_email = form.cleaned_data['email']
-            subject = form.cleaned_data['subject']
-            # Message body with name and email
-            message = 'You have a message from {} ({}):\n\n{}'.format(form.cleaned_data['name'],
-                                                                      form.cleaned_data['email'],
-                                                                      form.cleaned_data['message'])
-            try:
-                send_mail(subject, message, from_email, ['contactfrombitstobytes@gmail.com'], fail_silently=False)
-            except BadHeaderError:
-                return HttpResponse('Invalid header found.')
-            return HttpResponseRedirect(reverse('success'))
+            # Begin reCAPTCHA validation
+            recaptcha_response = request.POST.get('g-recaptcha-response')
+            url = 'https://www.google.com/recaptcha/api/siteverify'
+            values = {
+                'secret': settings.GOOGLE_RECAPTCHA_SECRET_KEY,
+                'response': recaptcha_response
+            }
+            data = urllib.parse.urlencode(values).encode()
+            req = urllib.request.Request(url, data=data)
+            response = urllib.request.urlopen(req)
+            result = json.loads(response.read().decode())
+            # End reCAPTCHA validation '''
+
+            if result['success']:
+                # reCAPTCHA passed validation
+                name = form.cleaned_data['name']
+                from_email = form.cleaned_data['email']
+                subject = form.cleaned_data['subject']
+                # Message body with name and email
+                message = 'You have a message from {} ({}):\n\n{}'.format(form.cleaned_data['name'],
+                                                                          form.cleaned_data['email'],
+                                                                          form.cleaned_data['message'])
+                try:
+                    send_mail(subject, message, from_email, ['contactfrombitstobytes@gmail.com'], fail_silently=False)
+                except BadHeaderError:
+                    return HttpResponse('Invalid header found.')
+                return HttpResponseRedirect(reverse('success'))
     return render(request, 'blog/contact.html', {'form': form})
 
 

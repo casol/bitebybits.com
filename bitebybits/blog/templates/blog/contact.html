@@ -1,6 +1,5 @@
 {% extends "blog/base.html" %}
 {% load staticfiles %}
-{% load crispy_forms_tags %}
 
 
 <body>
@@ -27,7 +26,16 @@
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <p>Want to get in touch with me? Fill out the form below to send me a message and I will try to get back to you within 24 hours!</p>
-                    {% crispy form %}
+                    <form method="post">
+                        {% csrf_token %}
+                        {{ form.as_p }}
+                        <div class="form-actions">
+                            <script src='https://www.google.com/recaptcha/api.js'></script>
+                            <div class="g-recaptcha" data-sitekey="6Lf7zB8UAAAAAAwfHOKh63uB3og5VEx1LYKl4cKg"></div>
+                            <button type="submit" class="btn btn-default">Send</button>
+                        </div>
+                    </form>
+
             </div>
         </div>
     </div>
