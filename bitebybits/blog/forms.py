@@ -12,7 +12,8 @@ class ContactForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         """
-        Added 'placeholder' attribute by customizing the default widget.
+        Added 'placeholder' attribute by customizing the default widget and
+        form control class for all fields.
         """
         super().__init__(*args, **kwargs)
         self.fields['name'].widget.attrs.update({'placeholder': 'Name'})
@@ -20,3 +21,5 @@ class ContactForm(forms.Form):
         self.fields['subject'].widget.attrs.update({'placeholder': 'Subject'})
         self.fields['message'].widget.attrs.update({'placeholder': 'Message'})
         self.fields['message'].widget.attrs.update({'rows': '5'})
+        for field in self.fields:
+            self.fields[field].widget.attrs['class'] = 'form-control'
