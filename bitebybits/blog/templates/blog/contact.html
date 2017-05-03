@@ -27,8 +27,19 @@
             <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                 <p>Want to get in touch with me? Fill out the form below to send me a message and I will try to get back to you within 24 hours!</p>
                     <form method="post">
+                        {% for field in form %}
                         {% csrf_token %}
-                        {{ form.as_p }}
+                            <div>
+                                <div class="row control-group">
+                                    <div class="form-group col-xs-12 floating-label-form-group controls">
+                                        {{ field.errors }}
+                                        {{ field.label_tag }}
+                                        {{ field }}
+                                        <p class="help-block text-danger"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
                         <div class="form-actions">
                             <script src='https://www.google.com/recaptcha/api.js'></script>
                             <div class="g-recaptcha" data-sitekey="6Lf7zB8UAAAAAAwfHOKh63uB3og5VEx1LYKl4cKg"></div>

@@ -1,11 +1,4 @@
 from django import forms
-from django.urls import reverse
-
-from crispy_forms.bootstrap import Field, InlineRadios, TabHolder, Tab
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
-
-from crispy_forms.layout import Submit, Layout, Div, Fieldset
 
 
 class ContactForm(forms.Form):
@@ -19,17 +12,11 @@ class ContactForm(forms.Form):
 
     def __init__(self, *args, **kwargs):
         """
-        Crispy_form FormHelper which is responsible for customizing the form.
+        Added 'placeholder' attribute by customizing the default widget.
         """
-        super(ContactForm, self).__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_id = 'contactForm'
-        self.helper.form_method = 'post'
-        self.helper.add_input(Submit('submit', 'Submit', css_class='btn btn-default'))
-
-
-
-
-
-
-
+        super().__init__(*args, **kwargs)
+        self.fields['name'].widget.attrs.update({'placeholder': 'Name'})
+        self.fields['email'].widget.attrs.update({'placeholder': 'Email'})
+        self.fields['subject'].widget.attrs.update({'placeholder': 'Subject'})
+        self.fields['message'].widget.attrs.update({'placeholder': 'Message'})
+        self.fields['message'].widget.attrs.update({'rows': '5'})
