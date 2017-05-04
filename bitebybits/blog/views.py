@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse, HttpResponseRedirect
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.urls import reverse
 from django.conf import settings
 
@@ -17,7 +18,19 @@ def post_list(request):
     """
     Displaying list of all posts with status published.
     """
-    posts = Post.published.all()
+    object_list = Post.published.all()
+    #  Paginator a list of objects, plus the number of items to show on each page
+    paginator = Paginator(object_list, 3)  # Show 3 posts per page
+
+    page = request.GET.get('page')
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        # If page is not an integer, deliver first page.
+        posts = paginator.page(1)
+    except EmptyPage:
+        #  # If page is out of range (e.g. 9999), deliver last page of results.
+        posts = paginator.page(paginator.num_pages)
     return render(request,
                   'blog/post/list.html',
                   {'posts': posts})
