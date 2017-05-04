@@ -405,3 +405,10 @@ img::-moz-selection {
 body {
   -webkit-tap-highlight-color: #0085A1;
 }
+
+/* code blocks scroll horizontal does't wrap code blocks */
+pre code {
+    overflow-x: auto;
+    word-wrap: normal;
+    white-space: pre;
+}
