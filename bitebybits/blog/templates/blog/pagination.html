@@ -1,15 +1,12 @@
  <ul class="pager">
      <li class="next">
          {% if page.has_next %}
-            <a href="?page={{ page.next_page_number }}">Older Posts &rarr;</a>
+            <a href="?page={{ page.next_page_number }}">Next &rarr;</a>
          {% endif %}
      </li>
-
-     <li>
-
+     <li class="previous">
          {% if page.has_previous %}
-            <a href="?page={{ page.previous_page_number }}">&larr; Previous Posts</a>
+         <a href="?page={{ page.previous_page_number }}">&larr; Previous</a>
          {% endif %}
      </li>
-
  </ul>
