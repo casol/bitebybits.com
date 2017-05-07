@@ -33,10 +33,6 @@ urlpatterns = [
         views.about_page,
         name='about'),
 
-    url(r'^success/$',
-        views.success,
-        name='success'),
-
     url(r'^ckeditor/',
         include('ckeditor_uploader.urls')),
 ]

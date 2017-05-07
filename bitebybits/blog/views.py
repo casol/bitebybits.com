@@ -3,6 +3,7 @@ from django.shortcuts import get_object_or_404
 from django.core.mail import send_mail, BadHeaderError
 from django.http import HttpResponse, HttpResponseRedirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib import messages
 from django.urls import reverse
 from django.conf import settings
 
@@ -76,7 +77,7 @@ def contact(request):
             req = urllib.request.Request(url, data=data)
             response = urllib.request.urlopen(req)
             result = json.loads(response.read().decode())
-            # End reCAPTCHA validation '''
+            # End reCAPTCHA validation
 
             if result['success']:
                 # reCAPTCHA passed validation
@@ -93,9 +94,14 @@ def contact(request):
                               from_email,
                               ['contactfrombitstobytes@gmail.com'],
                               fail_silently=False)
+                    messages.success(request, 'Thank you! Your email was sent and '
+                                              'I will get back to you as soon as I can.')
                 except BadHeaderError:
                     return HttpResponse('Invalid header found.')
-                return HttpResponseRedirect(reverse('success'))
+
+            else:
+                messages.error(request, 'Oh snap! Better check yourself, change '
+                                        'a few things up and try submitting again.')
     return render(request, 'blog/contact.html', {'form': form})
 
 

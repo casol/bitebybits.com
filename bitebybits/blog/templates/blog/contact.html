@@ -1,7 +1,6 @@
 {% extends "blog/base.html" %}
 {% load staticfiles %}
 
-
 <body>
     {% block page_header %}
     <!-- Page Header -->
@@ -40,11 +39,28 @@
                                 </div>
                             </div>
                         {% endfor %}
-                        <div class="form-actions">
-                            <script src='https://www.google.com/recaptcha/api.js'></script>
-                            <div class="g-recaptcha" data-sitekey="6Lf7zB8UAAAAAAwfHOKh63uB3og5VEx1LYKl4cKg"></div>
-                            <button type="submit" class="btn btn-default">Send</button>
+                        <br>
+                         {% if messages %}
+                         <div id="success">
+                             {% for message in messages %}
+                                <div class="alert {{ message.tags }}">
+                                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                                        <strong>
+                                            {{ message }}
+                                        </strong>
+                                </div>
+                             {% endfor %}
                          </div>
+                         {% endif%}
+                        <div class="row">
+                            <div class="form-group col-xs-12">
+                                <div class="form-actions">
+                                <script src='https://www.google.com/recaptcha/api.js'></script>
+                                <div class="g-recaptcha" data-sitekey="6Lf7zB8UAAAAAAwfHOKh63uB3og5VEx1LYKl4cKg"></div>
+                                <button type="submit" class="btn btn-default">Send</button>
+                                </div>
+                            </div>
+                        </div>
                     </form>
             </div>
         </div>
