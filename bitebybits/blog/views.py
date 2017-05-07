@@ -1,25 +1,35 @@
 from django.shortcuts import render
 from django.shortcuts import get_object_or_404
 from django.core.mail import send_mail, BadHeaderError
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
-from django.urls import reverse
 from django.conf import settings
+
+from .models import Post
+from .forms import ContactForm
 
 # Google reCAPTCHA
 import urllib
 import json
 
-from .models import Post
-from .forms import ContactForm
+from taggit.models import Tag
 
 
-def post_list(request):
+def post_list(request, tag_slug=None):
     """
-    Displaying list of all posts with status published.
+    Displaying list of all posts with status published or
+    posts tagged with a specific tag.
     """
     object_list = Post.published.all()
+    tag = None
+
+    if tag_slug:
+        # Retrieving Tag object with the given slug
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        # Filtering the list of posts with given tag
+        object_list = object_list.filter(tags__in=[tag])
+
     #  Paginator a list of objects, plus the number of items to show on each page
     paginator = Paginator(object_list, 3)  # Show 3 posts per page
 
@@ -34,7 +44,9 @@ def post_list(request):
         posts = paginator.page(paginator.num_pages)
     return render(request,
                   'blog/post/list.html',
-                  {'posts': posts})
+                  {'posts': posts,
+                   'page': page,
+                   'tag': tag})
 
 
 def post_detail(request, year, month, day, post):
@@ -103,7 +115,3 @@ def contact(request):
                 messages.error(request, 'Oh snap! Better check yourself, change '
                                         'a few things up and try submitting again.')
     return render(request, 'blog/contact.html', {'form': form})
-
-
-def success(request):
-    return render(request, 'blog/success.html',)

@@ -4,6 +4,8 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
 from ckeditor.fields import RichTextField
+from taggit.managers import TaggableManager
+
 
 class PublishedManager(models.Manager):
     """
@@ -37,6 +39,9 @@ class Post(models.Model):
 
     objects = models.Manager()  # default manager
     published = PublishedManager()  # custom manager
+
+    # taggit
+    tags = TaggableManager()
 
     def get_absolute_url(self):
         return reverse('blog:post_detail',
