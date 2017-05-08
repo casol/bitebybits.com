@@ -29,6 +29,12 @@
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                     <script>hljs.initHighlightingOnLoad();</script>
                     {{ post.body|safe }}
+
+                    {% for tag in post.tags.all %}
+                        <a href="{% url "blog:post_list_by_tag" tag.slug %}">
+                            <span class="label label-default">{{ tag.name }}</span>
+                        </a>
+                    {% endfor %}
                 </div>
             </div>
         </div>
