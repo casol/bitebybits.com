@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Post
+from .models import Post, PostImage
 
 
 class PostAdmin(admin.ModelAdmin):
@@ -15,3 +15,4 @@ class PostAdmin(admin.ModelAdmin):
     ordering = ['status', 'publish']
 
 admin.site.register(Post, PostAdmin)
+admin.site.register(PostImage)

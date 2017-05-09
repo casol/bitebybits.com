@@ -55,3 +55,18 @@ class Post(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class PostImage(models.Model):
+
+    post = models.ForeignKey(Post)
+    image = models.ImageField(upload_to='images/')
+    image_title = models.CharField(max_length=200)
+    image_author = models.CharField(max_length=150)
+    image_description = models.CharField(max_length=250, blank=True)
+    image_created = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.image_title
+
+
