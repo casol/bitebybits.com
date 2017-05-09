@@ -6,7 +6,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib import messages
 from django.conf import settings
 
-from .models import Post
+from .models import Post, PostImage
 from .forms import ContactForm
 
 # Google reCAPTCHA
@@ -60,9 +60,12 @@ def post_detail(request, year, month, day, post):
                              publish__year=year,
                              publish__month=month,
                              publish__day=day)
+    #images = PostImage.get(post
+    #images = get_object_or_404(PostImage)
     return render(request,
                   'blog/post/detail.html',
                   {'post': post})
+                   #'images': images})
 
 
 def about_page(request):

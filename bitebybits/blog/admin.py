@@ -3,6 +3,9 @@ from django.contrib import admin
 from .models import Post, PostImage
 
 
+class InlineImage(admin.StackedInline):
+    model = PostImage
+
 class PostAdmin(admin.ModelAdmin):
     list_display = ('title', 'slug', 'author',
                     'publish', 'status')
@@ -13,6 +16,11 @@ class PostAdmin(admin.ModelAdmin):
     raw_id_fields = ('author',)
     date_hierarchy = 'publish'
     ordering = ['status', 'publish']
+    inlines = [InlineImage]
+
+
+
+
 
 admin.site.register(Post, PostAdmin)
-admin.site.register(PostImage)
+#admin.site.register(PostImage)
