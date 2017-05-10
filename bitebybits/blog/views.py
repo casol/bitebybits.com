@@ -60,12 +60,14 @@ def post_detail(request, year, month, day, post):
                              publish__year=year,
                              publish__month=month,
                              publish__day=day)
-    #images = PostImage.get(post
-    #images = get_object_or_404(PostImage)
+    # Get post id
+    post_pk = post.id
+    # Get PostImage object
+    images = PostImage.objects.get(post_id=post_pk)
     return render(request,
                   'blog/post/detail.html',
-                  {'post': post})
-                   #'images': images})
+                  {'post': post,
+                   'images': images})
 
 
 def about_page(request):

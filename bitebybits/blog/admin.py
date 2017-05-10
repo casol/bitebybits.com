@@ -5,6 +5,9 @@ from .models import Post, PostImage
 
 class InlineImage(admin.StackedInline):
     model = PostImage
+    # Controls the number of extra forms fields
+    extra = 0
+
 
 class PostAdmin(admin.ModelAdmin):
     list_display = ('title', 'slug', 'author',
@@ -18,9 +21,5 @@ class PostAdmin(admin.ModelAdmin):
     ordering = ['status', 'publish']
     inlines = [InlineImage]
 
-
-
-
-
 admin.site.register(Post, PostAdmin)
-#admin.site.register(PostImage)
+

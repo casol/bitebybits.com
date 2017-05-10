@@ -58,7 +58,9 @@ class Post(models.Model):
 
 
 class PostImage(models.Model):
-
+    """
+    Model responsible for storing images.
+    """
     post = models.ForeignKey(Post)
     image = models.ImageField(upload_to='images/')
     image_title = models.CharField(max_length=200)
