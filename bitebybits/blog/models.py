@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 
 from ckeditor.fields import RichTextField
+from ckeditor_uploader.fields import RichTextUploadingField
 from taggit.managers import TaggableManager
 
 
@@ -29,7 +30,7 @@ class Post(models.Model):
                             unique_for_date='publish')
     author = models.ForeignKey(User,
                                related_name='blog_posts')
-    body = RichTextField()
+    body = RichTextUploadingField()
     publish = models.DateTimeField(default=timezone.now)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
