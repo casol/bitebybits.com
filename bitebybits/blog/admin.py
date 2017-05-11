@@ -4,6 +4,9 @@ from .models import Post, PostImage
 
 
 class InlineImage(admin.StackedInline):
+    """
+    Allows to upload image on the same page as a parent model"
+    """
     model = PostImage
     # Controls the number of extra forms fields
     extra = 0

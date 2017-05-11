@@ -52,7 +52,8 @@ def post_list(request, tag_slug=None):
 def post_detail(request, year, month, day, post):
     """
     Post detail view takes year, month, day and slug parameters
-    to retrieve a published post with requested slug and date.
+    to retrieve a published post with requested slug, date and
+    also corresponding post image.
     """
     post = get_object_or_404(Post,
                              slug=post,
