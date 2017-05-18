@@ -9,7 +9,9 @@ class PostSitemap(Sitemap):
     priority = 0.9
 
     def items(self):
+        """Return published entries."""
         return Post.published.all()
 
     def lastmod(self, obj):
+        """Return last modification of a post."""
         return obj.publish

@@ -1,12 +1,16 @@
-from django.test import TestCase, LiveServerTestCase, Client
+from django.test import TestCase, Client
 from django.utils import timezone
 # from django.core.urlresolvers import reverse  # Deprecated since version 1.10
 from django.urls import reverse
 from django.contrib.auth.models import User
 from django.core.paginator import Paginator, InvalidPage, PageNotAnInteger, EmptyPage
-from django.utils.cache import force_text
+from django.core.mail import send_mail, BadHeaderError
+from django.core.files.uploadedfile import SimpleUploadedFile
 
-from blog.models import Post
+
+from blog.models import Post, PostImage
+from blog.forms import ContactForm
+from blog import sitemaps, feeds
 
 
 class PostListTest(TestCase):
@@ -76,7 +80,7 @@ class PaginationTest(TestCase):
         paginator = Paginator(Post.objects.all(), 5)
         self.assertRaises(InvalidPage, paginator.page, 7)
 
-    #def test_first_page_instead_of_invalide(self):
+       #def test_first_page_instead_of_invalide(self):
        # paginator = Paginator(Post.objects.all(), 5)
        # p = paginator.page(7)
         #self.assertEqual('<Page 1 of 2>', force_text(p))
@@ -117,7 +121,7 @@ class PostTest(TestCase):
         self.assertEqual(field_body, 'body')
 
     def test_get_absolute_url(self):
-        self.assertEqual(self.p.get_absolute_url(), '/blog/2017/05/17/test-this/')
+        self.assertEqual(self.p.get_absolute_url(), '/blog/2017/05/18/test-this/')
 
     def test_post_fields(self):
         """test_post_fields() should return all post model fields."""
@@ -146,7 +150,7 @@ class PostTest(TestCase):
         self.assertEquals(only_post.created.minute, post.created.minute)
         self.assertEquals(only_post.created.second, post.created.second)
 
-
+"""
 class AdminTest(LiveServerTestCase):
     def test_login(self):
         # Create client
@@ -155,11 +159,111 @@ class AdminTest(LiveServerTestCase):
         response = c.get('/admin/', fallow=True)
         self.assertEqual(response.status_code, 302)
         #self.assertTrue('Log in' in response.content)
+"""
+
+class ContactFormTest(TestCase):
+    """Testing contact form."""
+    """
+    def test_renew_form_date_field_label(self):
+        form = ContactForm()
+        self.assertTrue(form.fields['name'].label == None or form.fields['name'].label == 'name')
+    """
+    def test_header(self):
+        """test_header should return true if BadHeaderError occur."""
+        error_occured = False
+        try:
+            send_mail('Header\nInjection', 'Here is the message.', 'from@example.com',
+                      ['to@example.com'], fail_silently=False)
+        except BadHeaderError:
+            error_occured = True
+        self.assertTrue(error_occured)
 
 
-class SmokeTest(TestCase):
+class PostDetailTest(TestCase):
 
-    def test_bad_maths(self):
-        self.assertEqual(1 + 1, 2)
+    def setUp(self):
+        self.user = User.objects.create_user(username="test", email="test@test.com", password="test")
+        self.post = Post.objects.create(title='Test this', slug='test-this', body='Test',
+                                        author=self.user, created=timezone.now(), status='published')
+        i = SimpleUploadedFile(name='foo.gif',
+                               content=b'GIF87a\x01\x00\x01\x00\x80\x01\x00\x00\x00\x00ccc,\x00\x00\x00\x00\x01\x00\''
+                                       b'x01\x00\x00\x02\x02D\x01\x00')
+        self.post_image = PostImage.objects.create(post=self.post, image=i,
+                                                   image_title='test0', image_author='someone')
+
+        self.url = self.post.get_absolute_url()
+
+    def test_post_with_status_published(self):
+        """A published post should by visible"""
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(self.post, response.context['post'])
+        self.assertNumQueries(1)
+
+    def test_post_with_status_unpublished(self):
+        """Post with status draft or trashed should not be visible test
+        should return 404."""
+        self.post.status = 'draft'
+        self.post.save()
+
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 404)
 
 
+class TestEntrySitemap(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create_user(username="test", email="test@test.com", password="test")
+        self.post_1 = Post.objects.create(title='Test this1', slug='test-this1', body='Test1',
+                                          author=self.user, created=timezone.now(), status='published')
+        self.post_2 = Post.objects.create(title='Test this2', slug='test-this2', body='Test2',
+                                          author=self.user, created=timezone.now(), status='published')
+        self.post_3 = Post.objects.create(title='Test this3', slug='test-this3', body='Test3',
+                                          author=self.user, created=timezone.now(), status='published')
+        self.post_4 = Post.objects.create(title='Test this4', slug='test-this4', body='Test4',
+                                          author=self.user, created=timezone.now(), status='draft')
+        self.entry_map = sitemaps.PostSitemap()
+
+    def test_items(self):
+        """test_items() should only return published entries."""
+        actual_entries = self.entry_map.items()
+
+        expected_slugs = ['test-this3', 'test-this2', 'test-this1']
+        actual_slugs = [post.slug for post in actual_entries]
+
+        self.assertEqual(actual_slugs, expected_slugs)
+        self.assertNumQueries(1)
+
+    def test_last_modified(self):
+        """test_last_modified() should be able to get the last update from a post"""
+        actual_update = self.entry_map.lastmod(self.post_3)
+
+        now = timezone.now()
+        self.assertGreaterEqual(now, actual_update)
+        self.assertGreaterEqual(actual_update, self.post_1.publish)
+
+
+class TestLatestPostsFeed(TestCase):
+
+    def setUp(self):
+        self.user = User.objects.create_user(username="test", email="test@test.com", password="test")
+        self.post_1 = Post.objects.create(title='Test this1', slug='test-this1', body='Test1',
+                                          author=self.user, created=timezone.now(), status='published')
+        self.post_2 = Post.objects.create(title='Test this2', slug='test-this2', body='Test2',
+                                          author=self.user, created=timezone.now(), status='published')
+        self.post_3 = Post.objects.create(title='Test this3', slug='test-this3', body='Test3',
+                                          author=self.user, created=timezone.now(), status='published')
+        self.post_4 = Post.objects.create(title='Test this4', slug='test-this4', body='Test4',
+                                          author=self.user, created=timezone.now(), status='draft')
+
+        self.feed = feeds.LatestPostFeed()
+
+    def test_feed_properties(self):
+        actual_entries = self.feed.items()
+
+        expected_slugs = ['test-this3', 'test-this2', 'test-this1']
+        actual_slugs = [post.slug for post in actual_entries]
+        self.assertEqual(self.feed.link(), reverse('/feed/'))
+        self.assertEqual(actual_slugs, expected_slugs)
+        self.assertNumQueries(1)
