@@ -3,7 +3,7 @@ from django.utils import timezone
 # from django.core.urlresolvers import reverse  # Deprecated since version 1.10
 from django.urls import reverse
 from django.contrib.auth.models import User
-from django.core.paginator import Paginator, InvalidPage, PageNotAnInteger, EmptyPage
+from django.core.paginator import Paginator, InvalidPage
 from django.core.mail import send_mail, BadHeaderError
 from django.core.files.uploadedfile import SimpleUploadedFile
 
@@ -121,7 +121,7 @@ class PostTest(TestCase):
         self.assertEqual(field_body, 'body')
 
     def test_get_absolute_url(self):
-        self.assertEqual(self.p.get_absolute_url(), '/blog/2017/05/18/test-this/')
+        self.assertEqual(self.p.get_absolute_url(), '/blog/2017/05/20/test-this/')
 
     def test_post_fields(self):
         """test_post_fields() should return all post model fields."""
@@ -150,16 +150,40 @@ class PostTest(TestCase):
         self.assertEquals(only_post.created.minute, post.created.minute)
         self.assertEquals(only_post.created.second, post.created.second)
 
-"""
-class AdminTest(LiveServerTestCase):
-    def test_login(self):
-        # Create client
-        c = Client()
 
-        response = c.get('/admin/', fallow=True)
-        self.assertEqual(response.status_code, 302)
-        #self.assertTrue('Log in' in response.content)
-"""
+class TestAdminPanel(TestCase):
+    def create_user(self):
+        self.username = 'test_admin'
+        self.password = User.objects.make_random_password()
+        user, created = User.objects.get_or_create(username=self.username)
+        user.set_password(self.password)
+        user.is_staff = True
+        user.is_superuser = True
+        user.is_active = True
+        user.save()
+        self.user = user
+
+    def test_spider_admin(self):
+        self.create_user()
+        client = Client()
+        client.login(username=self.username, password=self.password)
+        admin_pages = [
+            '/admin/',
+            '/admin/blog/post/',
+            '/admin/blog/post/add/',
+            '/admin/sites/site/',
+            '/admin/taggit/tag/',
+            '/admin/auth/',
+            '/admin/auth/group/',
+            '/admin/auth/group/add/',
+            '/admin/auth/user/',
+            '/admin/auth/user/add/',
+            '/admin/password_change/'
+        ]
+        for page in admin_pages:
+            resp = client.get(page)
+            assert resp.status_code == 200
+
 
 class ContactFormTest(TestCase):
     """Testing contact form."""
@@ -245,8 +269,10 @@ class TestEntrySitemap(TestCase):
 
 
 class TestLatestPostsFeed(TestCase):
+    """Test blog feeds."""
 
     def setUp(self):
+        self.c = Client()
         self.user = User.objects.create_user(username="test", email="test@test.com", password="test")
         self.post_1 = Post.objects.create(title='Test this1', slug='test-this1', body='Test1',
                                           author=self.user, created=timezone.now(), status='published')
@@ -264,9 +290,9 @@ class TestLatestPostsFeed(TestCase):
 
         expected_slugs = ['test-this3', 'test-this2', 'test-this1']
         actual_slugs = [post.slug for post in actual_entries]
-        self.assertEqual(self.feed.link(), reverse('/feed/'))
+        response = self.c.get('/blog/feed/')
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(actual_slugs, expected_slugs)
         self.assertNumQueries(1)
 
 
-"""Test new ubuntu."""
