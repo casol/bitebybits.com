@@ -267,3 +267,6 @@ class TestLatestPostsFeed(TestCase):
         self.assertEqual(self.feed.link(), reverse('/feed/'))
         self.assertEqual(actual_slugs, expected_slugs)
         self.assertNumQueries(1)
+
+
+"""Test new ubuntu."""
