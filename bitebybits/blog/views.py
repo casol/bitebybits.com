@@ -31,7 +31,7 @@ def post_list(request, tag_slug=None):
         object_list = object_list.filter(tags__in=[tag])
 
     #  Paginator a list of objects, plus the number of items to show on each page
-    paginator = Paginator(object_list, 3)  # Show 3 posts per page
+    paginator = Paginator(object_list, 5)  # Show 5 posts per page
 
     page = request.GET.get('page')
     try:
