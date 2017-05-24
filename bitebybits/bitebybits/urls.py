@@ -1,12 +1,11 @@
 from django.conf.urls import include, url
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
-from blog.sitemaps import PostSitemap
-
 from django.conf import settings
 from django.conf.urls.static import static
 
 from blog import views
+from blog.sitemaps import PostSitemap
 
 
 sitemaps = {
@@ -21,9 +20,9 @@ urlpatterns = [
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': sitemaps},
         name='django.contrib.sitemaps.views.sitemap'),
 
-    url(r'^blog/', include('blog.urls',
-                           namespace='blog',
-                           app_name='blog')),
+    url(r'^', include('blog.urls',
+                      namespace='blog',
+                      app_name='blog')),
 
     url(r'^contact/',
         views.contact,
