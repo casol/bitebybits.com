@@ -121,7 +121,7 @@ class PostTest(TestCase):
         self.assertEqual(field_body, 'body')
 
     def test_get_absolute_url(self):
-        self.assertEqual(self.p.get_absolute_url(), '/blog/2017/05/20/test-this/')
+        self.assertEqual(self.p.get_absolute_url(), '/2017/05/25/test-this/')
 
     def test_post_fields(self):
         """test_post_fields() should return all post model fields."""
@@ -290,7 +290,7 @@ class TestLatestPostsFeed(TestCase):
 
         expected_slugs = ['test-this3', 'test-this2', 'test-this1']
         actual_slugs = [post.slug for post in actual_entries]
-        response = self.c.get('/blog/feed/')
+        response = self.c.get('/feed/')
         self.assertEqual(response.status_code, 200)
         self.assertEqual(actual_slugs, expected_slugs)
         self.assertNumQueries(1)
