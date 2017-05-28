@@ -121,7 +121,12 @@ class PostTest(TestCase):
         self.assertEqual(field_body, 'body')
 
     def test_get_absolute_url(self):
-        self.assertEqual(self.p.get_absolute_url(), '/2017/05/25/test-this/')
+        now = "{0}{year}{0}{month}{0}{day}".format('/',
+                                                   year=timezone.now().strftime('%Y'),
+                                                   month=timezone.now().strftime('%m'),
+                                                   day=timezone.now().strftime('%d'))
+
+        self.assertEqual(self.p.get_absolute_url(), now + '/test-this/')
 
     def test_post_fields(self):
         """test_post_fields() should return all post model fields."""

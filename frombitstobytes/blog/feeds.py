@@ -8,9 +8,9 @@ class LatestPostFeed(Feed):
     Django built-in syndication feed framework to generate
     RSS or Atom feeds.
     """
-    title = 'Bite by Bits - Blog'
+    title = 'Blog - from bits to bytes'
     link = '/blog/'
-    description = 'New post on Bite by Bits!'
+    description = 'New post on frombitstobytes.com!'
 
     def items(self):
         return Post.published.all()[:3]

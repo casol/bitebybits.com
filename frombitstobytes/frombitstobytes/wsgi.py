@@ -1,5 +1,5 @@
 """
-WSGI config for bitebybits project.
+WSGI config for frombitstobytes project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
