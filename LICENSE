@@ -1,8 +1,8 @@
 MIT License
 
-Copyright for portions of project bitebybits.com are held by
+Copyright for portions of project frombitstobytes.com are held by
 Blackrock Digital LLC., 2013 as part of project startbootstrap-clean-blog.
-All other copyright for project bitebybits.com are held by casol 2017.
+All other copyright for project frombitstobytes.com are held by casol 2017.
 
 Copyright (c) 2017 casol
 
