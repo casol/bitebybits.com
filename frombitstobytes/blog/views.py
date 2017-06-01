@@ -110,7 +110,7 @@ def contact(request):
                     send_mail(subject,
                               message,
                               from_email,
-                              ['contactfrombitstobytes@gmail.com'],
+                              ['frombitstobytes.com@gmail.com'],
                               fail_silently=False)
                     messages.success(request, 'Thank you! Your email was sent and '
                                               'I will get back to you as soon as I can.')
