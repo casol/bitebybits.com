@@ -114,6 +114,7 @@ def contact(request):
                               fail_silently=False)
                     messages.success(request, 'Thank you! Your email was sent and '
                                               'I will get back to you as soon as I can.')
+                    form = ContactForm()
                 except BadHeaderError:
                     return HttpResponse('Invalid header found.')
 
