@@ -35,7 +35,7 @@ $ python manage.py runserver
 
 ## Deployment
 
-Set Up Django with Postgres, Nginx, and Gunicorn on Ubuntu 16.04 hosted on [DigitalOcean](https://m.do.co/c/750db310081f)
+Set Up with Django with Postgres, Nginx, and Gunicorn on Ubuntu 16.04 hosted on [DigitalOcean](https://m.do.co/c/750db310081f)
 
 ### See It Live
 
